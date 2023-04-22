@@ -1,0 +1,82 @@
+version: '3.9'
+
+services:
+
+  python:
+    build: ./imagens/python/.
+    container_name: python
+    command: python3 app.py
+    volumes:
+      - ./volumes/python:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+
+  node:
+    build: ./imagens/node/.
+    container_name: nodejs
+    command: npm start
+    volumes:
+      - ./volumes/node:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+       - mongo
+    
+  php:
+    build: ./imagens/php/.
+    container_name: php
+    volumes:
+      - ./volumes/php/src:/var/www/html
+    ports:
+      - 8000:80
+    depends_on:
+      - mysql 
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.6
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: user
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    container_name: express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - ./volumes/redisdb:/data
+    ports:
+      - 6379:6379
+
