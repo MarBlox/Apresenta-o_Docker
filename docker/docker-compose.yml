@@ -22,10 +22,10 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-       - mongo
+      - mongo
     
   php:
-    build: ./imagens/php/.
+    build: ./images/php/
     container_name: php
     volumes:
       - ./volumes/php/src:/var/www/html

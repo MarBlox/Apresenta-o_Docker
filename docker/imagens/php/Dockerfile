@@ -1,5 +1,3 @@
-FROM php:8.1.18-fpm-alpine3.17
+FROM php:7.4-apache 
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 RUN apt-get update && apt-get upgrade -y
-
-
