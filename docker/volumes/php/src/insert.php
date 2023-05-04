@@ -1,27 +1,44 @@
-<?php
-// Conexão com o banco de dados
-$mysqli = new mysqli("localhost", "seu_usuario", "sua_senha", "seu_banco_de_dados");
+<!DOCTYPE html>
+<html>
 
-if ($mysqli->connect_error) {
-    die("Falha na conexão: " . $mysqli->connect_error);
-}
+<head>
+	<title>Insert</title>
+</head>
 
-$first_name = $_POST["first_name"];
-$last_name = $_POST["last_name"];
-$email = $_POST["email"];
-$password = $_POST["password"];
+<body>
+		<?php
+		// servername => db
+		// username => root
+		// password => example
+		// database name => user
+		$conn = mysqli_connect("mysql", "root", "example", "user");
+		
+		// verifica a conexão
+		if($conn === false){
+			die("ERROR: Could not connect. "
+				. mysqli_connect_error());
+		}
+		
+		// valores da db
+		$first_name = $_REQUEST['first_name'];
+		$last_name = $_REQUEST['last_name'];
+		$email = $_REQUEST['email'];
+		
+		$sql = "INSERT INTO user (first_name, last_name, email) VALUES ('$first_name',
+        '$last_name','$email')";
+		
+		if(mysqli_query($conn, $sql)){
+			echo "<h3>Connected Successfully.</h3>";
 
-$query = "INSERT INTO usuarios (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
-$stmt = $mysqli->prepare($query);
-$stmt->bind_param("ssss", $first_name, $last_name, $email, $password);
-$result = $stmt->execute();
+			echo nl2br("\n$first_name\n $last_name\n $email");
+		} else{
+			echo "ERROR: Hush! Sorry $sql. "
+				. mysqli_error($conn);
+		}
+		
+		// fechar a conexao
+		mysqli_close($conn);
+		?>
+</body>
 
-if ($result) {
-    echo "Registro inserido com sucesso!";
-} else {
-    echo "Erro ao inserir registro: " . $stmt->error;
-}
-
-$stmt->close();
-$mysqli->close();
-?>
+</html>

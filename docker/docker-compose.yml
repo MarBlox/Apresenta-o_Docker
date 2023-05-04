@@ -25,7 +25,7 @@ services:
       - mongo
     
   php:
-    build: ./images/php/
+    build: ./imagens/php/.
     container_name: php
     volumes:
       - ./volumes/php/src:/var/www/html
